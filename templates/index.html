@@ -96,6 +96,17 @@
             padding: 6px 0;
             position: relative;
         }
+        .course-row.high-points {
+            background: #e8f5e9 !important;
+            border-left: 4px solid #4CAF50 !important;
+        }
+        .course-row.uncertain {
+            background-color: #fff3e0;
+        }
+        .course-row.uncertain.high-points {
+            background-color: #e8f5e9 !important;
+            border-left: 4px solid #4CAF50 !important;
+        }
         .semester-title-short {
             display: none;
         }
@@ -252,11 +263,70 @@
             background-color: #4CAF50;
             transition: width 0.3s ease;
         }
+        .info-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e3f2fd;
+            border-radius: 8px;
+            display: none;
+        }
+        .info-container.visible {
+            display: block;
+        }
+        .info-toggle {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .info-toggle:hover {
+            background-color: #1976D2;
+        }
+        .info-content {
+            line-height: 1.6;
+        }
+        .info-content ul {
+            margin-left: 20px;
+        }
+        .info-content li {
+            margin-bottom: 8px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Grade Calculator</h1>
+        <button class="info-toggle" onclick="toggleInfo()">ℹ️ Information</button>
+        <div class="info-container" id="info-container">
+            <div class="info-content">
+                <h3>How to Use the Grade Calculator</h3>
+                <ul>
+                    <li>Enter your course codes (e.g., INGA1234) in the course name fields</li>
+                    <li>Select your current grade for each course from the dropdown menu</li>
+                    <li>If you plan to improve a grade, select the improved grade in the "Improved Grade" column</li>
+                    <li>Check the "Completed" box for courses you have finished</li>
+                    <li>Your progress and average grade will be calculated automatically</li>
+                    <li>Click the link icon (🔗) next to a course code to visit its NTNU page</li>
+                </ul>
+                <h3>Point System</h3>
+                <ul>
+                    <li>Most courses are worth 7.5 study points</li>
+                    <li>One course in semester 6 is worth 22.5 study points (highlighted in green)</li>
+                    <li>Total program points: 180 study points</li>
+                </ul>
+                <h3>Features</h3>
+                <ul>
+                    <li>Automatic grade calculation and progress tracking</li>
+                    <li>Support for all NTNU courses</li>
+                    <li>Quick access to course pages</li>
+                    <li>Save your progress automatically</li>
+                    <li>Compare current and improved grades</li>
+                </ul>
+            </div>
+        </div>
         <div class="progress-container">
             <div class="progress-label">
                 <span>Total Progress</span>
@@ -346,6 +416,9 @@
         function createCourseRow(points) {
             const courseRow = document.createElement('div');
             courseRow.className = 'course-row';
+            if (points === 22.5) {
+                courseRow.classList.add('high-points');
+            }
             courseRow.innerHTML = `
                 <div class="course-row-content">
                     <div class="course-col-left">
@@ -433,7 +506,7 @@
         }
 
         function updateCourseLink(input) {
-            const courseCode = input.value.trim();
+            const courseCode = input.value.trim().toUpperCase();
             let linkContainer = input.parentElement.querySelector('.course-link');
 
             if (courseCode) {
@@ -742,6 +815,11 @@
             });
             updateCourseLink(courseNameInput);
             updateRowStyle(courseRow);
+        }
+
+        function toggleInfo() {
+            const infoContainer = document.getElementById('info-container');
+            infoContainer.classList.toggle('visible');
         }
 
         // Load saved courses when the page loads
